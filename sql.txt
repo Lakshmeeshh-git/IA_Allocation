@@ -1,0 +1,17 @@
+create database invigilation_system;
+use invigilation_system;
+
+create table class(room_no varchar(10) primary key, room_capacity int, priority int);
+create table subject(subject_code varchar(15) primary key, subject_name varchar(30), sem int);
+create table student(usn varchar(11), s_name char(40), sem int, section char(3), room_no varchar(10), foreign key(room_no) references class(room_no));
+create table faculty(fid varchar(15) primary key, fname char(40));
+create table subject_faculty(fid varchar(15), foreign key(fid) references faculty(fid) on update cascade on delete cascade, subject_code varchar(15), foreign key(subject_code) references subject(subject_code) on update cascade on delete cascade);
+
+create table user(user_name varchar(30) primary key, password varchar(30));
+insert into user values('test', 'Test123');
+insert into subject values('-','-',0);
+
+create procedure deallocation() update student set room_no=null;
+
+create trigger deallocate before update on class for each row call deallocation();
+
